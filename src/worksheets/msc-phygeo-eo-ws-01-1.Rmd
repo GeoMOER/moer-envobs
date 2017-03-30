@@ -1,0 +1,170 @@
+tall.---
+title: "msc-phygeo-eo-ws-01-1"
+author: "MOC - Environmental Observations (F. Detsch, C. Reudenbach, T. Nauss)"
+date: "30 März 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE, message=FALSE}
+source("C:/Users/tnauss/permanent/edu/msc-phygeo-environmental-observation/scripts/msc-phygeo-environmental-observation/src/functions/set_environment.R")
+```
+
+## Get administrative boundaries
+Download administrative boundaries for Germany from <http://www.gadm.org/country> and subset the polygon dataset to Hessen.
+```{r, message=FALSE}
+hessen <- rgdal::readOGR(paste0(path_admin, "DEU_adm1.shp"), "DEU_adm1")
+hessen <- hessen[hessen@data$NAME_1 == "Hessen", ]
+# mapview(hessen)
+saveRDS(hessen, paste0(path_rdata, "hessen.rds"))
+```
+## Get GBIF information
+Get GBIF information on the distribution of relevant species. Subset the species occurence records to the area of Hessen. Create the final data frame using only those species which have at least 80 occurences.
+```{r}
+species <- c("Somatochlora arctica", "Saxicola rubetra", "Myotis bechsteinii", "Corvus monedula", "Alcedo atthis", "Columba oenas", "Vanellus vanellus", "Onychogomphus forcipatus", "Barbastella barbastellus", "Milvus milvus", "Milvus migrans", "Dryocopus martius", "Ciconia ciconia", "Pernis apivorus")
+
+
+species_hessen <- lapply(species, function(s){
+  print(s)
+  info <- rgbif::occ_search(scientificName = s, country = "DE", hasCoordinate = TRUE)
+  df <- data.frame(NAME = info$data$name,
+                   LAT = info$data$decimalLatitude,
+                   LON = info$data$decimalLongitude)
+  sp::coordinates(df) <- ~LON+LAT
+  raster::projection(df) <- CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
+  df_hessen <- df[which(rgeos::gIntersects(hessen, df, byid = TRUE)), ]
+  return(df_hessen)
+})
+
+species_hessen <- do.call("rbind", species_hessen)
+
+species_nbr <- plyr::count(species_hessen@data$NAME)
+species_nms <- species_nbr$x[species_nbr$freq >= 80]
+
+species_hessen <- species_hessen[species_hessen@data$NAME %in% species_nms, ]
+
+# mapview(species_hessen, zcol = "NAME")
+
+species_hessen_df <- as.data.frame(species_hessen)
+
+saveRDS(species_hessen, paste0(path_rdata, "species_hessen.rds"))
+saveRDS(species_hessen_df, paste0(path_rdata, "species_hessen_df.rds"))
+```
+## Get Corine etc. information
+Download appropriate data from http://land.copernicus.eu/pan-european. The projection is ETRS-LAEA, EPSG 3035.
+
+Corine land cover
+```{r}
+prj_crs <- CRS("+init=epsg:3035")
+hessen <- readRDS(paste0(path_rdata, "hessen.rds"))
+bb_hessen <- sp::spTransform(hessen, prj_crs)
+
+corine <- raster(paste0(path_corine, "g100_clc12_V18_5.tif"))
+projection(corine) <- prj_crs
+corine <- crop(corine, bb_hessen)
+# mapview(corine)
+saveRDS(corine, paste0(path_rdata, "corine.rds"))
+```
+
+Forest structure and type
+```{r}
+fty <- raster(paste0(path_forest, "FTY_eur_020m_fin.tif"))
+projection(fty)
+bb_hessen <- sp::spTransform(hessen, projection(fty))
+fty <- crop(fty, bb_hessen)
+# mapview(fty)
+saveRDS(fty, paste0(path_rdata, "fty.rds"))
+
+
+fad <- raster(paste0(path_forest, "FAD_eur_020m_fin.tif"))
+projection(fad)
+bb_hessen <- sp::spTransform(hessen, projection(fad))
+fad <- crop(fad, bb_hessen)
+# mapview(fad)
+saveRDS(fad, paste0(path_rdata, "fad.rds"))
+```
+
+
+```{r}
+
+
+
+dem_files <- list.files(paste0(path_raster, "dem"), pattern = glob2rx("*.TIF"), full.names = TRUE)
+dem <- lapply(dem_files, function(f){
+  r <- raster(f)
+  sh <- sp::spTransform(species_hessen, projection(r))
+  r <- crop(r, sh)
+  mapview(r)
+})
+
+
+```
+
+
+## MaxENT
+```{r}
+# get predictor variables
+fnames <- list.files(path=paste(system.file(package="dismo"), '/ex', sep=''), 
+              pattern='grd', full.names=TRUE )
+predictors <- stack(fnames)
+#plot(predictors)
+
+# file with presence points
+occurence <- paste(system.file(package="dismo"), '/ex/bradypus.csv', sep='')
+occ <- read.table(occurence, header=TRUE, sep=',')[,-1]
+
+# witholding a 20% sample for testing 
+fold <- kfold(occ, k=5)
+occtest <- occ[fold == 1, ]
+occtrain <- occ[fold != 1, ]
+
+# fit model, biome is a categorical variable
+me <- maxent(predictors, occtrain, factors='biome')
+
+# see the maxent results in a browser:
+# me
+
+# use "args"
+# me2 <- maxent(predictors, occtrain, factors='biome', args=c("-J", "-P"))
+
+# plot showing importance of each variable
+plot(me)
+
+# response curves
+# response(me)
+
+# predict to entire dataset
+r <- predict(me, predictors) 
+
+# with some options:
+# r <- predict(me, predictors, args=c("outputformat=raw"), progress='text', 
+#      filename='maxent_prediction.grd')
+
+plot(r)
+points(occ)
+
+#testing
+# background data
+bg <- randomPoints(predictors, 1000)
+
+#simplest way to use 'evaluate'
+e1 <- evaluate(me, p=occtest, a=bg, x=predictors)
+
+# alternative 1
+# extract values
+pvtest <- data.frame(extract(predictors, occtest))
+avtest <- data.frame(extract(predictors, bg))
+
+e2 <- evaluate(me, p=pvtest, a=avtest)
+
+# alternative 2 
+# predict to testing points 
+testp <- predict(me, pvtest) 
+head(testp)
+testa <- predict(me, avtest) 
+
+e3 <- evaluate(p=testp, a=testa)
+e3
+threshold(e3)
+
+plot(e3, 'ROC')
+```
