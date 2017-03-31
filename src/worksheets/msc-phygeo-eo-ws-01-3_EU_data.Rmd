@@ -1,0 +1,92 @@
+tall.---
+title: "msc-phygeo-eo-ws-01-1"
+author: "MOC - Environmental Observations (F. Detsch, C. Reudenbach, T. Nauss)"
+date: "30 März 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE, message=FALSE}
+source("C:/Users/tnauss/permanent/edu/msc-phygeo-environmental-observation/scripts/msc-phygeo-environmental-observation/src/functions/set_environment.R")
+```
+
+## Get Corine etc. information
+Download datasets from the European Environment Agency (EEA) on land-cover (CORINE), forest type (fty) and tree cover density (tcd) as well as a digital elevation model (dem) via <http://land.copernicus.eu/pan-european>. The projection is ETRS-LAEA, EPSG 3035. Convert all datasets to the project projection EPSG 25832. Use the Corine resolution of 100 m as a basis for all raster files. In order to speed things up, the corine as well as any other EEA dataset is croped to roughly the area of hessen first (bb_3035).
+
+Compile Corine land-cover data.
+```{r}
+prj <- sp::CRS("+init=epsg:25832")
+prj_corine <- sp::CRS("+init=epsg:3035")
+
+hessen <- readRDS(paste0(path_rdata, "v_hessen.rds"))
+bb_3035 <- sp::spTransform(hessen, prj_corine)
+bb_3035 <- rgeos::gBuffer(bb_3035, width = 10000)
+# mapview(bb_3035)
+
+corine <- raster::raster(paste0(path_corine, "g100_clc12_V18_5.tif"))
+projection(corine) <- prj_corine
+corine <- raster::crop(corine, bb_3035)
+corine <- raster::projectRaster(corine, res = 100, crs = prj, method = "ngb")
+
+# mapview(corine)
+saveRDS(corine, paste0(path_rdata, "r_corine.rds"))
+# corine <- readRDS(paste0(path_rdata, "r_corine.rds"))
+```
+
+Compile forest type (fty) and additional information. Values in fty are 0 = non tree area, 1 = broadleved forest, 2 = coniferous forest, 254 = unclassifiable and 255 = outside area.
+```{r}
+fty <- raster::raster(paste0(path_forest, "FTY_eur_020m_fin.tif"))
+projection(fty)
+bb <- sp::spTransform(hessen, projection(fty))
+bb <- rgeos::gBuffer(bb, width = 10000)
+fty <- raster::crop(fty, bb)
+fty <- raster::projectRaster(fty, corine, method="ngb")
+# mapview(fty)
+saveRDS(fty, paste0(path_rdata, "r_fty.rds"))
+# fty <- readRDS(paste0(path_rdata, "r_fty.rds"))
+```
+
+
+Compile forest type additional information (fad). Values are 0 = non tree area, 3 = agricultural trees (broadleved), 4 = trees in urban context, 5 = trees in urban context, 254 = unclassifiable and 255 = outside area.
+```{r}
+fad <- raster::raster(paste0(path_forest, "FAD_eur_020m_fin.tif"))
+projection(fad)
+bb <- sp::spTransform(hessen, projection(fty))
+bb <- rgeos::gBuffer(bb, width = 10000)
+fad <- raster::crop(fad, bb)
+fad <- raster::projectRaster(fad, corine, method="ngb")
+# mapview(fad)
+saveRDS(fad, paste0(path_rdata, "r_fad.rds"))
+# fad <- readRDS(paste0(path_rdata, "r_fad.rds"))
+```
+
+
+Compile tree crown density data (tcd). Values 0 to 100 give the percentage density, 254 = unclassifiable and 255 = outside area.
+```{r}
+tcd <- raster::raster(paste0(path_forest, "TCD_eur_020m_fin.tif"))
+projection(tcd)
+bb <- sp::spTransform(hessen, projection(tcd))
+bb <- rgeos::gBuffer(bb, width = 10000)
+tcd <- raster::crop(tcd, bb)
+tcd <- raster::projectRaster(tcd, corine, method="ngb")
+# mapview(tcd)
+saveRDS(tcd, paste0(path_rdata, "r_tcd.rds"))
+# tcd <- readRDS(paste0(path_rdata, "r_tcd.rds"))
+```
+
+Compile digital elevation model (dem) data.
+```{r}
+dem_files <- list.files(paste0(path_raster, "dem"), pattern = glob2rx("*.TIF"), full.names = TRUE)
+dem <- lapply(dem_files, function(f){
+  r <- raster::raster(f)
+  bb <- sp::spTransform(hessen, projection(r))
+  bb <- rgeos::gBuffer(bb, width = 10000)
+  r <- raster::crop(r, bb)
+  r <- raster::projectRaster(r, corine, method="bilinear")
+  return(r)
+})
+dem <- raster::merge(dem[[1]], dem[[2]])
+names(dem) <- "dem"
+# mapview(dem)
+saveRDS(dem, paste0(path_rdata, "r_dem.rds"))
+# dem <- readRDS(paste0(path_rdata, "r_dem.rds"))
+```

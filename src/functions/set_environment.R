@@ -8,8 +8,10 @@ if(Sys.info()["sysname"] == "Windows"){
 path_data <- paste0(filepath_base, "data/")
 
 path_gbif <- paste0(path_data, "gbif/")
+path_model <- paste0(path_data, "model/")
 path_raster <- paste0(path_data, "raster/")
 path_dem <- paste0(path_raster, "dem/")
+path_climate <- paste0(path_raster, "climate/")
 path_corine <- paste0(path_raster, "corine/")
 path_forest <- paste0(path_raster, "forest/")
 

@@ -1,0 +1,138 @@
+tall.---
+title: "msc-phygeo-eo-ws-01-1"
+author: "MOC - Environmental Observations (F. Detsch, C. Reudenbach, T. Nauss)"
+date: "30 März 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE, message=FALSE}
+source("C:/Users/tnauss/permanent/edu/msc-phygeo-environmental-observation/scripts/msc-phygeo-environmental-observation/src/functions/set_environment.R")
+```
+
+## Sampling bias
+```{r}
+soc <- readRDS(paste0(path_rdata, "v_soc.rds"))
+# mapview(soc, zcol = "NAME")
+```
+
+## Load environmental data (predictors)
+Load stack of environmental variables.
+```{r}
+env_files <- list.files(path_rdata, pattern = glob2rx("r_*"), full.names = TRUE)
+
+env <- lapply(env_files, function(f){
+  readRDS(f)
+})
+env <- stack(env)
+saveRDS(env, paste0(path_rdata, "s_env.rds"))
+```
+
+
+## Compile occurence data set using all samples
+Use all occurence samples and create 10000 background samples from a regular 1000m grid all over Hessen.
+```{r}
+hessen <- readRDS(paste0(path_rdata, "v_hessen.rds"))
+soc <- readRDS(paste0(path_rdata, "v_soc.rds"))
+
+res = 1000
+n = 10000
+
+background_points <- raster::rasterToPoints(raster::raster(hessen, resolution = res), spatial = TRUE)
+set.seed(11)
+smpls <- sample(length(background_points), size = n)
+background_points <- background_points[smpls, ]
+
+bg_info <- data.frame(NAME = rep("Background", n),
+                      TYPE = 0)
+background_points <- SpatialPointsDataFrame(background_points, bg_info)
+
+# Extract background data
+background_env <- raster::extract(env, background_points, sp = TRUE)
+
+# Extract species data
+species <- unique(soc$NAME)
+soc_all_env <- lapply(species, function(s){
+  act <- raster::extract(env, soc[soc@data$NAME == s, ], sp = TRUE)
+  act@data$TYPE = 1
+  act <- rbind(act, background_env)
+})
+# mapview(soc_all_env[[1]], zcol = "NAME")
+
+soc_all_env_df <- lapply(soc_all_env, function(s){
+  df <- as.data.frame(s)
+  df <- df[complete.cases(df), ]
+  df$g100_clc12_V18_5 <- as.factor(df$g100_clc12_V18_5)
+  df$FAD_eur_020m_fin <- as.factor(df$FAD_eur_020m_fin)
+  df$FTY_eur_020m_fin <- as.factor(df$FTY_eur_020m_fin)
+  return(df)
+})
+
+saveRDS(soc_all_env, paste0(path_rdata, "soc_all_env.rds"))
+saveRDS(soc_all_env_df, paste0(path_rdata, "soc_all_env_df.rds"))
+```
+
+
+## Compile occurence data set using samples from a 5000 m grid
+Use only a maximum of one occurence sample within a 2500 m grid. Create 5000 background samples from a regular 2500m grid all over Hessen.
+```{r}
+hessen <- readRDS(paste0(path_rdata, "v_hessen.rds"))
+soc <- readRDS(paste0(path_rdata, "v_soc.rds"))
+
+res = 2500
+n = 5000
+
+background_points <- raster::rasterToPoints(raster::raster(hessen, resolution = res), spatial = TRUE)
+set.seed(11)
+smpls <- sample(length(background_points), size = n)
+background_points <- background_points[smpls, ]
+
+bg_info <- data.frame(NAME = rep("Background", n),
+                      TYPE = 0)
+background_points <- SpatialPointsDataFrame(background_points, bg_info)
+
+# Extract background data
+background_env <- raster::extract(env, background_points, sp = TRUE)
+
+# Extract species data
+sample_raster <- raster::raster(hessen, resolution = res)
+species <- unique(soc$NAME)
+soc_gs2500_env <- lapply(species, function(s){
+  soc_gs2500_env <- dismo::gridSample(soc[soc@data$NAME == s, ], sample_raster, n = 1)
+  soc_gs2500_env <- data.frame(NAME = s, soc_gs2500_env)
+  return(soc_gs2500_env)
+})
+soc_gs2500_env <- do.call("rbind", soc_gs2500_env)
+plyr::count(soc_gs2500_env$NAME)
+soc_gs2500_env$TYPE = 1
+coordinates(soc_gs2500_env) <- ~LON+LAT
+raster::projection(soc_gs2500_env) <- projection(soc)
+
+
+
+# Extract species data
+species <- unique(soc_gs2500_env$NAME)
+soc_gs2500_env <- lapply(species, function(s){
+  act <- raster::extract(env, soc_gs2500_env[soc_gs2500_env@data$NAME == s, ], sp = TRUE)
+  act <- rbind(act, background_env)
+})
+# mapview(soc_all_env[[1]], zcol = "NAME")
+
+
+soc_gs2500_env_df <- lapply(soc_gs2500_env, function(s){
+  df <- as.data.frame(s)
+  df <- df[complete.cases(df), ]
+  df$g100_clc12_V18_5 <- as.factor(df$g100_clc12_V18_5)
+  df$FAD_eur_020m_fin <- as.factor(df$FAD_eur_020m_fin)
+  df$FTY_eur_020m_fin <- as.factor(df$FTY_eur_020m_fin)
+  return(df)
+})
+  
+saveRDS(soc_gs2500_env, paste0(path_rdata, "soc_gs2500_env.rds"))
+saveRDS(soc_gs2500_env_df, paste0(path_rdata, "soc_gs2500_env_df.rds"))
+```
+
+
+
+
+
+

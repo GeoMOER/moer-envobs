@@ -1,0 +1,35 @@
+tall.---
+title: "msc-phygeo-eo-ws-01-1"
+author: "MOC - Environmental Observations (F. Detsch, C. Reudenbach, T. Nauss)"
+date: "30 März 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE, message=FALSE}
+source("C:/Users/tnauss/permanent/edu/msc-phygeo-environmental-observation/scripts/msc-phygeo-environmental-observation/src/functions/set_environment.R")
+```
+
+## Get Worldclim information
+Download WorldClim Version 2 datasets from <http://worldclim.org/version2> and crop to the spatial grids to the study area extend. Convert all datasets to the project projection EPSG 25832 using the geometry of the Corine dataset.
+```{r}
+prj <- sp::CRS("+init=epsg:25832")
+
+hessen <- readRDS(paste0(path_rdata, "v_hessen.rds"))
+hessen_buffer <- rgeos::gBuffer(hessen, width = 10000)
+corine <- readRDS(paste0(path_rdata, "r_corine.rds"))
+
+wc_files <- list.files(path_climate, pattern = glob2rx("*.tif"), recursive = TRUE, full.names = TRUE)
+
+wc <- lapply(wc_files, function(f){
+  r <- raster::raster(f)
+  bb <- sp::spTransform(hessen_buffer, projection(r))
+  r <- raster::crop(r, bb)
+  r <- raster::projectRaster(r, corine, method="bilinear")
+  return(r)
+})
+wc <- stack(wc)
+# mapview(wc[[15]])
+saveRDS(wc, paste0(path_rdata, "r_wc.rds"))
+```
+
+

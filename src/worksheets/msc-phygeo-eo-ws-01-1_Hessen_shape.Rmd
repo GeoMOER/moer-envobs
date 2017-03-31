@@ -1,0 +1,22 @@
+tall.---
+title: "msc-phygeo-eo-ws-01-1"
+author: "MOC - Environmental Observations (F. Detsch, C. Reudenbach, T. Nauss)"
+date: "30 März 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE, message=FALSE}
+source("C:/Users/tnauss/permanent/edu/msc-phygeo-environmental-observation/scripts/msc-phygeo-environmental-observation/src/functions/set_environment.R")
+```
+
+## Get administrative boundaries
+Download administrative boundaries for Germany from <http://www.gadm.org/country> and subset the polygon dataset to Hessen. Transform projection to project projection EPSG 25832
+```{r, message=FALSE}
+prj <- sp::CRS("+init=epsg:25832")
+
+hessen <- rgdal::readOGR(paste0(path_admin, "DEU_adm1.shp"), "DEU_adm1")
+hessen <- hessen[hessen@data$NAME_1 == "Hessen", ]
+hessen <- sp::spTransform(hessen, prj)
+# mapview(hessen)
+saveRDS(hessen, paste0(path_rdata, "v_hessen.rds"))
+```

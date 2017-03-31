@@ -1,0 +1,80 @@
+tall.---
+title: "msc-phygeo-eo-ws-01-1"
+author: "MOC - Environmental Observations (F. Detsch, C. Reudenbach, T. Nauss)"
+date: "30 März 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE, message=FALSE}
+source("C:/Users/tnauss/permanent/edu/msc-phygeo-environmental-observation/scripts/msc-phygeo-environmental-observation/src/functions/set_environment.R")
+```
+
+## MaxENT
+```{r}
+soc_all_env_df <- readRDS(paste0(path_rdata, "soc_all_env_df.rds"))
+
+i = 1
+meta <- c("NAME", "TYPE", "LAT", "LON")
+
+sae_df <- soc_all_env_df[[i]]
+sae_df <- sae_df[, -c(which(colnames(sae_df) %in% "wc2.0_30s_prec_01"):which(colnames(sae_df) %in% "wc2.0_30s_wind_12"))]
+
+str(sae_df)
+predictors <- sae_df[, which(!colnames(sae_df) %in% meta)]
+type <- sae_df$TYPE
+
+
+# str(predictors)
+# cor_pred <- cor(predictors[, c(-1, -3, -4, -5)])
+
+
+fold <- dismo::kfold(sae_df$TYPE, k=5)
+
+
+train <- predictors[fold != 1, ]
+train_type <- type[fold != 1]
+
+test <- predictors[fold == 1, ]
+test_type <- type[fold == 1]
+
+# fit model, biome is a categorical variable
+me <- maxent(train, p = train_type, path = paste0(path_model, "test"))
+
+# see the maxent results in a browser:
+me
+
+# plot showing importance of each variable
+plot(me)
+
+# response curves
+# par(mar=c(1,1,1,1))
+response(me)
+
+# predict to entire dataset
+p_test <- dismo::predict(me, test) 
+p_test_occ <- p_test[test_type == 1]
+p_test_bg <- p_test[test_type == 0]
+
+
+#simplest way to use 'evaluate'
+e_test <- dismo::evaluate(p=p_test_occ, a=p_test_bg, model = me)
+threshold(e_test)
+plot(e_test, 'ROC')
+
+# use "args"
+# me2 <- maxent(predictors, occtrain, factors='biome', args=c("-J", "-P"))
+
+# with some options:
+# r <- predict(me, predictors, args=c("outputformat=raw"), progress='text', 
+#      filename='maxent_prediction.grd')
+
+plot(r)
+points(occ)
+
+
+env <- readRDS(paste0(path_rdata, "s_env.rds"))
+
+p_all <- dismo::predict(me, env) 
+plot(p_all)
+
+```
