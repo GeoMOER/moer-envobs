@@ -76,5 +76,6 @@ env <- readRDS(paste0(path_rdata, "s_env.rds"))
 
 p_all <- dismo::predict(me, env) 
 plot(p_all)
-
+saveRDS(me, file = paste0(path_rdata, "sae_maxent_somatochlora_arctica.rds"))
+saveRDS(p_all, file = paste0(path_rdata, "sae_maxent_somatochlora_arctica_prediction.rds"))
 ```
