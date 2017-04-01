@@ -69,6 +69,8 @@ soc_all_env_df <- lapply(soc_all_env, function(s){
 
 saveRDS(soc_all_env, paste0(path_rdata, "soc_all_env.rds"))
 saveRDS(soc_all_env_df, paste0(path_rdata, "soc_all_env_df.rds"))
+
+# soc_all_env <- readRDS(paste0(path_rdata, "soc_all_env.rds"))
 ```
 
 

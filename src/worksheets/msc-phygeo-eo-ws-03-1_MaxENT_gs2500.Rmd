@@ -1,0 +1,176 @@
+tall.---
+title: "msc-phygeo-eo-ws-01-1"
+author: "MOC - Environmental Observations (F. Detsch, C. Reudenbach, T. Nauss)"
+date: "30 März 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE, message=FALSE}
+source("C:/Users/tnauss/permanent/edu/msc-phygeo-environmental-observation/scripts/msc-phygeo-environmental-observation/src/functions/set_environment.R")
+```
+
+## MaxENT
+```{r}
+soc_gs2500_env_df <- readRDS(paste0(path_rdata, "soc_gs2500_env_df.rds"))
+soc_gs2500_env <- readRDS(paste0(path_rdata, "soc_gs2500_env.rds"))
+
+i = 1
+meta <- c("NAME", "TYPE", "LAT", "LON")
+
+sge_df <- soc_gs2500_env_df[[i]]
+sge_df <- soc_gs2500_env[[i]]
+sge_df <- sge_df[sge_df@data$TYPE == 1, ]
+
+sge_df <- sge_df[, -c(which(colnames(sge_df) %in% "wc2.0_30s_prec_01"):which(colnames(sge_df) %in% "wc2.0_30s_wind_12"))]
+
+str(sge_df)
+background <- sge_df[sge_df$TYPE == 0, which(!colnames(sge_df) %in% meta)]
+presence <- sge_df[sge_df$TYPE == 1, which(!colnames(sge_df) %in% meta)]
+
+
+# str(predictors)
+# cor_pred <- cor(predictors[, c(-1, -3, -4, -5)])
+
+
+fold <- dismo::kfold(presence, k=5)
+
+train_presence <- presence[fold != 1, ]
+test_presence <- presence[fold == 1, ]
+
+train <- rbind(train_presence, background)
+test <- rbind(test_presence, background)
+train_type <- c(rep(1, nrow(train_presence)), rep(0, nrow(background)))
+test_type <- c(rep(1, nrow(test_presence)), rep(0, nrow(background)))
+
+# fit model, biome is a categorical variable
+me <- maxent(train, p = train_type, path = paste0(path_model, "me_gs2500_aNULL"))
+
+# see the maxent results in a browser:
+me
+
+# plot showing importance of each variable
+plot(me)
+pairs(me, pa = "pa")
+
+# response curves
+# par(mar=c(1,1,1,1))
+response(me)
+
+
+# predict to entire dataset
+p_test <- dismo::predict(me, test) 
+p_test_presence <- p_test[test_type == 1]
+p_test_bg <- p_test[test_type == 0]
+
+
+#simplest way to use 'evaluate'
+e_test <- dismo::evaluate(p=p_test_occ, a=p_test_bg, model = me)
+threshold(e_test)
+plot(e_test, 'ROC')
+boxplot(e_test)
+density(e_test)
+
+# spatial bias
+background <- sge_df[sge_df$TYPE == 0, which(!colnames(sge_df) %in% meta)]
+presence <- sge_df[sge_df$TYPE == 1, which(!colnames(sge_df) %in% meta)]
+
+
+bg_fold <- dismo::kfold(background, k=5)
+train_background <- background[bg_fold != 1, ]
+test_background <- background[bg_fold == 1, ]
+
+sb <- dismo::ssb(test_presence, test_background, train_presence)
+
+# use "args"
+# me2 <- maxent(predictors, occtrain, factors='biome', args=c("-J", "-P"))
+
+# with some options:
+# r <- predict(me, predictors, args=c("outputformat=raw"), progress='text', 
+#      filename='maxent_prediction.grd')
+
+plot(r)
+points(occ)
+
+
+env <- readRDS(paste0(path_rdata, "s_env.rds"))
+
+p_all <- dismo::predict(me, env) 
+plot(p_all)
+saveRDS(me, file = paste0(path_rdata, "soc_gs2500_maxent_somatochlora_arctica.rds"))
+saveRDS(p_all, file = paste0(path_rdata, "soc_gs2500_maxent_somatochlora_arctica_prediction.rds"))
+```
+
+
+## MaxENT
+```{r}
+env <- readRDS(paste0(path_rdata, "s_env.rds"))
+names(env)
+env <- env[[1:5]]
+
+soc_gs2500_env <- readRDS(paste0(path_rdata, "soc_gs2500_env.rds"))
+
+i = 1
+
+sge <- soc_gs2500_env[[i]]
+
+sge_presence <- sge[sge@data$TYPE == 1, ]
+sge_absence <- sge[sge@data$TYPE != 1, ]
+
+fold <- dismo::kfold(sge_presence, k=5)
+
+train_presence <- sge_presence[fold != 1, ]
+test_presence <- sge_presence[fold == 1, ]
+
+me <- dismo::maxent(env, p = train_presence, a = sge_absence, factors = c("g100_clc12_V18_5", "FAD_eur_020m_fin", "FTY_eur_020m_fin"), path = paste0(path_model, "me_gs2500_points_aNULL"))
+
+# see the maxent results in a browser:
+me
+
+# plot showing importance of each variable
+plot(me)
+pairs(me, pa = "pa")
+
+# response curves
+# par(mar=c(1,1,1,1))
+response(me)
+
+#simplest way to use 'evaluate'
+e_test <- dismo::evaluate(p=test_presence, a=sge_absence, model = me)
+threshold(e_test)
+plot(e_test, 'ROC')
+boxplot(e_test)
+density(e_test)
+
+# spatial bias
+sb <- dismo::ssb(test_presence, sge_absence, train_presence)
+sb[1]/sb[2]
+
+# i <- dismo::pwdSample(test_presence, sge_absence, train_presence)
+# sb[1]/sb[2]
+
+p_all <- dismo::predict(me, env) 
+
+plot(p_all)
+points(train_presence, col = "red")
+points(test_presence, col = "blue")
+points(sge_absence, col = "grey")
+
+map.colors = colorRampPalette(c("#FC8D59", "#FEE08B","#99D594", "#3288BD"))
+spplot(p_all, col.regions =map.colors(1000),
+       colorkey = list(space="right"), cuts = c(100), at = seq(0, 1, by = 0.01),
+       scales = list(draw = TRUE),
+       key=list(corner=c(0,0.02),cex=0.9, #space = 'bottom', 
+                points = list(pch = 15, cex = 1, col = c("blue","darkblue","darkgreen")),
+                text = list(c("Presence training",
+                              "Presence test",
+                              "Absence")))) +
+  as.layer(spplot(train_presence, zcol = "NAME", col.regions="blue", colorkey=FALSE)) +
+  as.layer(spplot(test_presence, zcol = "NAME", col.regions="darkblue", colorkey=FALSE)) +
+  as.layer(spplot(sge_absence, zcol = "NAME", col.regions="darkgreen", colorkey=FALSE, pch=1,cex=0.5))
+
+
+
+saveRDS(me, file = paste0(path_rdata, "soc_gs2500_maxent_somatochlora_arctica.rds"))
+saveRDS(p_all, file = paste0(path_rdata, "soc_gs2500_maxent_somatochlora_arctica_prediction.rds"))
+
+```
