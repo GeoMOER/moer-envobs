@@ -12,30 +12,7 @@ source("C:/Users/tnauss/permanent/edu/msc-phygeo-environmental-observation/scrip
 ## Get GBIF information
 Get GBIF information on the distribution of relevant species. Subset the species occurence records to the area of Hessen. Create the final data frame using only those species which have at least 80 occurences. Transform projection to project projection EPSG 25832.
 ```{r}
-prj <- sp::CRS("+init=epsg:25832")
-prj_gbif <- sp::CRS("+init=epsg:4326")
-
-hessen <- readRDS(paste0(path_rdata, "v_hessen.rds"))
-
-species <- c("Somatochlora arctica", "Saxicola rubetra", "Myotis bechsteinii", "Corvus monedula", "Alcedo atthis", "Columba oenas", "Vanellus vanellus", "Onychogomphus forcipatus", "Barbastella barbastellus", "Milvus milvus", "Milvus migrans", "Dryocopus martius", "Ciconia ciconia", "Pernis apivorus")
-
-
-soc <- lapply(species, function(s){
-  print(s)
-  info <- rgbif::occ_search(scientificName = s, country = "DE", hasCoordinate = TRUE)
-  gbif <- data.frame(NAME = info$data$name,
-                     LAT = info$data$decimalLatitude,
-                     LON = info$data$decimalLongitude)
-  # For Myotis bechsteinii, one observation is somewhere in Mongolia, remove it.
-  gbif <- gbif[gbif$LON<=30, ]
-  sp::coordinates(gbif) <- ~LON+LAT
-  raster::projection(gbif) <- prj_gbif
-  gbif <- sp::spTransform(gbif, prj)
-  gbif <- gbif[which(rgeos::gIntersects(hessen, gbif, byid = TRUE)), ]
-  return(gbif)
-})
-soc <- do.call("rbind", soc)
-saveRDS(soc, paste0(path_rdata, "soc_org.rds"))
+ soc <- readRDS(paste0(path_rdata, "soc_org.rds"))
 ```
 
 ## Clean data
@@ -50,10 +27,10 @@ soc <- soc[!dpl,]
 Include only those datasets which have at least 60 occurences.
 ```{r}
 soc_nbr <- plyr::count(soc@data$NAME)
-soc_nms <- soc_nbr$x[soc_nbr$freq >= 60]
+soc_nms <- soc_nbr$x[soc_nbr$freq >= 105]
 
 soc <- soc[soc@data$NAME %in% soc_nms, ]
 # mapview(soc, zcol = "NAME")
-
+soc@data$NAME <- droplevels(soc@data$NAME)
 saveRDS(soc, paste0(path_rdata, "v_soc.rds"))
 ```

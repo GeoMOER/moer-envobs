@@ -27,6 +27,71 @@ env <- stack(env)
 saveRDS(env, paste0(path_rdata, "s_env.rds"))
 ```
 
+## Background sample as regular grid
+```{r}
+hessen <- readRDS(paste0(path_rdata, "v_hessen.rds"))
+br <- sp::spsample(hessen, n = 10000, type = "regular")
+br <- sp::SpatialPointsDataFrame(br, data.frame(NAME = rep("background", length(br))))
+brfolds <- dismo::kfold(br, k=4)
+br_train_test <- lapply(seq(4), function(i){
+  test <- br[which(brfolds == i), ]
+  train <- br[which(brfolds != i), ]
+  list(training = train, test = test)
+})
+
+saveRDS(br, paste0(path_rdata, "v_br.rds"))
+saveRDS(br_train_test, paste0(path_rdata, "br_train_test.rds"))
+```
+
+## Species sample random
+```{r}
+soc <- readRDS(paste0(path_rdata, "v_soc.rds"))
+species <- unique(soc@data$NAME)
+
+sr_train_test <- lapply(species, function(s){
+  cur_soc <- soc[soc@data$NAME == s, ]
+  cur_soc_folds <- dismo::kfold(cur_soc, k=4)
+  sr_train_test <- lapply(seq(4), function(i){
+    test <- cur_soc[which(cur_soc_folds == i), ]
+    train <- cur_soc[which(cur_soc_folds != i), ]
+    list(training = train, test = test)
+  })
+})
+names(sr_train_test) <- species
+saveRDS(sr_train_test, paste0(path_rdata, "sr_train_test.rds"))
+```
+
+## Compile species random/background random grid dataset
+```{r}
+br_train_test <- readRDS(paste0(path_rdata, "br_train_test.rds"))
+sr_train_test <- readRDS(paste0(path_rdata, "sr_train_test.rds"))
+species <- names(sr_train_test)
+
+sr_br <- lapply(seq(length(sr_train_test)), function(s){
+  cur_spec <- names(sr_train_test[s])
+  cur_stt <- sr_train_test[[s]]
+  train_test <- lapply(seq(length(cur_stt)), function(cs){
+    
+    train_occ <- cur_stt[[cs]]$training
+    train_bgr <- br_train_test[[cs]]$training
+    train_bgr@data$NAME <- paste(train_bgr@data$NAME, cur_spec, " ")
+    
+    test_occ <- cur_stt[[cs]]$test
+    test_bgr <- br_train_test[[cs]]$test
+    test_bgr@data$NAME <- paste(test_bgr@data$NAME, cur_spec, " ")
+    
+    training <- list(occurence = train_occ, background = train_bgr)
+    test <- list(occurence = test_occ, background = test_bgr)
+    return(list(training = training, test = test))
+  })
+  names(train_test) <- paste0("fold", seq(length(cur_stt)))
+  return(train_test)
+})
+names(sr_br) <- species
+sr_br
+
+saveRDS(sr_br, paste0(path_rdata, "sr_br.rds"))
+```
 
 ## Compile occurence data set using all samples
 Use all occurence samples and create 10000 background samples from a regular 1000m grid all over Hessen.

@@ -9,6 +9,71 @@ output: html_document
 source("C:/Users/tnauss/permanent/edu/msc-phygeo-environmental-observation/scripts/msc-phygeo-environmental-observation/src/functions/set_environment.R")
 ```
 
+## MaxENT species random/background random grid dataset (sr_br)
+```{r}
+hessen <- readRDS(paste0(path_rdata, "v_hessen.rds"))
+sr_br <- readRDS(paste0(path_rdata, "sr_br.rds"))
+env <- readRDS(paste0(path_rdata, "s_env.rds"))
+mi_env <- env[[1:5]]
+
+s = 1
+sf = 1
+
+cur_sr_br <- sr_br[[s]]
+cur_sr_br_sf <- cur_sr_br[[sf]]
+
+
+me <- dismo::maxent(mi_env, p = cur_sr_br_sf$training$occurence, a = cur_sr_br_sf$training$background, 
+                    factors = c("g100_clc12_V18_5", "FAD_eur_020m_fin", "FTY_eur_020m_fin"), 
+                    path = paste0(path_model, "me_sr_br_s01_f01"))
+me
+
+# plot showing importance of each variable
+plot(me)
+pairs(me, pa = "pa")
+
+# response curves
+# par(mar=c(1,1,1,1))
+response(me)
+
+# evaluate
+e_test <- dismo::evaluate(p=cur_sr_br_sf$test$occurence, a=cur_sr_br_sf$test$background, model = me, x = mi_env)
+threshold(e_test)
+plot(e_test, 'ROC')
+boxplot(e_test)
+density(e_test)
+
+# spatial bias
+sb <- dismo::ssb(cur_sr_br_sf$test$occurence, cur_sr_br_sf$test$background, cur_sr_br_sf$training$occurence)
+sb[1]/sb[2]
+
+p_all <- dismo::predict(me, env) 
+saveRDS(p_all, paste0(path_rdata, "me_sr_br_s01_f01_hessen.rds"))
+
+plot(p_all)
+points(cur_sr_br_sf$training$occurence, col = "red")
+points(cur_sr_br_sf$test$occurence, col = "blue")
+points(cur_sr_br_sf$training$background, col = "grey")
+points(cur_sr_br_sf$test$background, col = "grey")
+
+map.colors = colorRampPalette(c("#FC8D59", "#FEE08B","#99D594", "#3288BD"))
+spplot(p_all, col.regions =map.colors(1000),
+       colorkey = list(space="right"), cuts = c(100), at = seq(0, 1, by = 0.01),
+       scales = list(draw = TRUE),
+       key=list(corner=c(0,0.02),cex=0.9, #space = 'bottom', 
+                points = list(pch = 15, cex = 1, col = c("blue","darkblue","darkgreen")),
+                text = list(c("Presence training",
+                              "Presence test",
+                              "Absence")))) +
+  as.layer(spplot(cur_sr_br_sf$training$occurence, zcol = "NAME", col.regions="blue", colorkey=FALSE)) +
+  as.layer(spplot(cur_sr_br_sf$test$occurence, zcol = "NAME", col.regions="darkblue", colorkey=FALSE)) +
+  as.layer(spplot(hessen, zcol = "ID_0", colorkey=FALSE))
+
+```
+
+
+
+
 ## MaxENT
 ```{r}
 soc_all_env_df <- readRDS(paste0(path_rdata, "soc_all_env_df.rds"))
