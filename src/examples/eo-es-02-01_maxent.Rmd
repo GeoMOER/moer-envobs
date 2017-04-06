@@ -1,0 +1,155 @@
+tall.---
+title: "msc-phygeo-eo-ws-01-1"
+author: "MOC - Environmental Observations (F. Detsch, C. Reudenbach, T. Nauss)"
+date: "30 März 2017"
+output: html_document
+---
+
+The following example illustrates a simple use of the maxent model for relative species occurence prediction. The data set used for this example has been taken from the [GBIF database]<http://www.gbif.org/> and encompasses four animal species which occure in Hessen, Germany. The study area is Hessen. Environmental data used in this study is taken from  the [Copernicus site]<http://land.copernicus.eu/pan-european> and encompasses Corine land-cover class, forest types and tree crown densities. All raster datasets have been resampled to 100 m.
+
+
+```{r setup, include=FALSE, warning = FALSE, message=FALSE}
+source("C:/Users/tnauss/permanent/edu/msc-phygeo-environmental-observation/scripts/msc-phygeo-environmental-observation/src/functions/set_environment.R")
+```
+
+## Background sample as regular grid
+Sample background information as a regular spaced grid from 10,000 locations. Split the background information dataset into four folds and compile four cross-validation samples with 3/4 training and 1/4 testing data.
+```{r}
+hessen <- readRDS(paste0(path_rdata, "v_hessen.rds"))
+br <- sp::spsample(hessen, n = 10000, type = "regular")
+br <- sp::SpatialPointsDataFrame(br, data.frame(NAME = rep("background", length(br))))
+brfolds <- dismo::kfold(br, k=4)
+br_train_test <- lapply(seq(4), function(i){
+  test <- br[which(brfolds == i), ]
+  train <- br[which(brfolds != i), ]
+  list(training = train, test = test)
+})
+
+saveRDS(br, paste0(path_rdata, "v_br.rds"))
+saveRDS(br_train_test, paste0(path_rdata, "br_train_test.rds"))
+```
+
+
+## Species sample random
+Randomply split species occurence into four folds and compile four cross-validation samples with 3/4 training and 1/4 testing data. The species data is provided as a list of four spatial datasets each containing the occurence locations of one species.
+```{r}
+soc <- readRDS(paste0(path_rdata, "v_soc.rds"))
+species <- unique(soc@data$NAME)
+
+sr_train_test <- lapply(species, function(s){
+  cur_soc <- soc[soc@data$NAME == s, ]
+  cur_soc_folds <- dismo::kfold(cur_soc, k=4)
+  sr_train_test <- lapply(seq(4), function(i){
+    test <- cur_soc[which(cur_soc_folds == i), ]
+    train <- cur_soc[which(cur_soc_folds != i), ]
+    list(training = train, test = test)
+  })
+})
+names(sr_train_test) <- species
+saveRDS(sr_train_test, paste0(path_rdata, "sr_train_test.rds"))
+```
+
+## Compile species random/background random grid dataset
+Compile a combined dataset which is a nested list according to this scheme:
+
+
+```{r}
+br_train_test <- readRDS(paste0(path_rdata, "br_train_test.rds"))
+sr_train_test <- readRDS(paste0(path_rdata, "sr_train_test.rds"))
+species <- names(sr_train_test)
+
+sr_br <- lapply(seq(length(sr_train_test)), function(s){
+  cur_spec <- names(sr_train_test[s])
+  cur_stt <- sr_train_test[[s]]
+  train_test <- lapply(seq(length(cur_stt)), function(cs){
+    
+    train_occ <- cur_stt[[cs]]$training
+    train_bgr <- br_train_test[[cs]]$training
+    train_bgr@data$NAME <- paste(train_bgr@data$NAME, cur_spec, " ")
+    
+    test_occ <- cur_stt[[cs]]$test
+    test_bgr <- br_train_test[[cs]]$test
+    test_bgr@data$NAME <- paste(test_bgr@data$NAME, cur_spec, " ")
+    
+    training <- list(occurence = train_occ, background = train_bgr)
+
+    test <- list(occurence = test_occ, background = test_bgr)
+    return(list(training = training, test = test))
+  })
+  names(train_test) <- paste0("fold", seq(length(cur_stt)))
+  return(train_test)
+})
+names(sr_br) <- species
+
+
+saveRDS(sr_br, paste0(path_rdata, "sr_br.rds"))
+```
+
+## MaxENT species random/background random grid dataset (sr_br)
+Compute a maxent model using the cross-validation dataset above as well as the four environmental datasets mentioned in the begining of this example. The example computes the model just for the first species and the first fold in the dataset (which is selected by variables s and sf).
+```{r, message=FALSE, warning=FALSE}
+hessen <- readRDS(paste0(path_rdata, "v_hessen.rds"))
+sr_br <- readRDS(paste0(path_rdata, "sr_br.rds"))
+env <- readRDS(paste0(path_rdata, "s_env.rds"))
+mi_env <- env[[1:5]]
+
+# Select only first species and first fold
+s = 1
+sf = 1
+cur_sr_br <- sr_br[[s]]
+cur_sr_br_sf <- cur_sr_br[[sf]]
+```
+
+```{r, eval=FALSE, message=FALSE, warning=FALSE}
+# Compute maxent model
+me <- dismo::maxent(mi_env, p = cur_sr_br_sf$training$occurence, a = cur_sr_br_sf$training$background, 
+                    factors = c("g100_clc12_V18_5", "FAD_eur_020m_fin", "FTY_eur_020m_fin"), 
+                    path = paste0(path_model, "me_sr_br_s01_f01"))
+
+# me # This would open the results in a browser
+saveRDS(me, paste0(path_rdata, "me_eo-es-02-01.rds"))
+```
+
+```{r, echo=FALSE}
+me <- readRDS(paste0(path_rdata, "me_eo-es-02-01.rds"))
+mi_env <- readRDS(paste0(path_rdata, "mi_env_eo-es-02-01.rds"))
+```
+
+Plot the variable importance of the maxent model
+```{r}
+# plot showing importance of each variable
+plot(me)
+```
+
+Plot how the species distribution is explained by pairs of environmental data.
+```{r}
+pairs(me, pa = "pa")
+```
+
+Plot how the species distribution is explained individual environmental datasets.
+```{r}
+response(me)
+```
+
+Evaluate the model using the hold-back test data of the first cross-validation fold.
+```{r}
+e_test <- dismo::evaluate(p=cur_sr_br_sf$test$occurence, a=cur_sr_br_sf$test$background, model = me, x = mi_env)
+threshold(e_test)
+plot(e_test, 'ROC')
+boxplot(e_test)
+density(e_test)
+```
+
+Show some statistic meassures of model performance
+```{r}
+threshold(e_test)
+plot(e_test, 'ROC')
+```
+
+Show how well occurence and background predictions separate.
+```{r}
+boxplot(e_test)
+density(e_test)
+```
+
+ä

@@ -9,12 +9,6 @@ output: html_document
 source("C:/Users/tnauss/permanent/edu/msc-phygeo-environmental-observation/scripts/msc-phygeo-environmental-observation/src/functions/set_environment.R")
 ```
 
-## Sampling bias
-```{r}
-soc <- readRDS(paste0(path_rdata, "v_soc.rds"))
-# mapview(soc, zcol = "NAME")
-```
-
 ## Load environmental data (predictors)
 Load stack of environmental variables.
 ```{r}
@@ -42,6 +36,7 @@ br_train_test <- lapply(seq(4), function(i){
 saveRDS(br, paste0(path_rdata, "v_br.rds"))
 saveRDS(br_train_test, paste0(path_rdata, "br_train_test.rds"))
 ```
+
 
 ## Species sample random
 ```{r}
