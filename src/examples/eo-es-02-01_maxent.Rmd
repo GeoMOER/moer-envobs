@@ -134,10 +134,10 @@ response(me)
 Evaluate the model using the hold-back test data of the first cross-validation fold.
 ```{r}
 e_test <- dismo::evaluate(p=cur_sr_br_sf$test$occurence, a=cur_sr_br_sf$test$background, model = me, x = mi_env)
-threshold(e_test)
 plot(e_test, 'ROC')
 boxplot(e_test)
 density(e_test)
+threshold(e_test)
 ```
 
 Show some statistic meassures of model performance

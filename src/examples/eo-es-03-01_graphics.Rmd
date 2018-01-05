@@ -1,0 +1,55 @@
+tall.---
+title: "msc-phygeo-eo-ws-01-1"
+author: "MOC - Environmental Observations (F. Detsch, C. Reudenbach, T. Nauss)"
+date: "30 März 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE, warning = FALSE, message=FALSE}
+source("C:/Users/tnauss/permanent/edu/msc-phygeo-environmental-observation/scripts/msc-phygeo-environmental-observation/src/functions/set_environment.R")
+
+sme <- readRDS(paste0(path_rdata, "samp_method_list.rds"))
+names(sme) <- c("sr_br", "sr_bbr", "sgm_bgm", "sgm_bbgm")
+```
+
+## Some graphics
+```{r}
+gpa <- lapply(seq(length(sme)), function(i){
+  curs_name <- names(sme[i])
+  curs_data <- sme[[i]]
+  e <- lapply(curs_data, function(f){
+    e <- f$eval
+    data.frame(CV = curs_name,
+               PRESABS = c(rep("PRES", e@np), rep("ABS", e@na)),
+               PRESABS_PROBS = c(e@presence, e@absence))
+  })
+  e <- do.call("rbind", e)
+})
+gpa <- do.call("rbind", gpa)
+
+ggplot(data=gpa, aes(x = CV, y = PRESABS_PROBS, fill = PRESABS)) +
+  geom_boxplot(notch = TRUE)
+```
+
+
+```{r}
+gac <- lapply(seq(length(sme)), function(i){
+  curs_name <- names(sme[i])
+  curs_data <- sme[[i]]
+  e <- lapply(curs_data, function(f){
+    e <- f$eval
+    data.frame(CV = curs_name,
+               AUC = e@auc,
+               COR = e@cor)
+  })
+  e <- do.call("rbind", e)
+})
+gac <- do.call("rbind", gac)
+
+ggplot(data=gac, aes(x = CV, y = AUC)) +
+  geom_boxplot(notch = FALSE)
+
+gacl <- reshape2::melt(gac, id.vars = "CV")
+ggplot(data=gacl, aes(x = CV, y = value, fill = variable)) +
+  geom_boxplot(notch = FALSE)
+```
