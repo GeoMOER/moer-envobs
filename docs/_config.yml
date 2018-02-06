@@ -13,20 +13,80 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: Your awesome title
+
+# moer: Adjust title etc. Depending on serving the site on GitHub or OER, different
+# url/baseurl settings have to be used.
+title: Marburg Open Educational Resources | Environmental Informatics
 email: your-email@example.com
 description: >- # this means to ignore newlines until "baseurl:"
   Write an awesome description for your new site here. You can edit this
   line in _config.yml. It will appear in your document head meta (for
   Google search results) and in your feed.xml site description.
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+# baseurl: "/data/mriliasmooc/lm_data/lm_2291"
+# url: "https://oer.uni-marburg.de"
+baseurl: ""
+url: "http://marburg-open-courseware.github.io"
 twitter_username: jekyllrb
 github_username:  jekyll
 
 # Build settings
+# moer: Adjust theme etc.
 markdown: kramdown
-theme: minima
+# theme: minima
+remote_theme: "marburg-open-courseware/minimal-mistakes"
+
+# moer: Add collections and default styles.
+include:
+  - _pages
+  
+collections:
+  examples:
+    output: true
+    permalink: /:collection/:path
+  lectures:
+    output: true
+    permalink: /:collection/:path
+  worksheets:
+    output: true
+    permalink: /:collection/:path
+
+defaults:
+  # examples
+  - scope:
+      path: ""
+      type: examples
+    values:
+      category: "examples"
+      layout: single
+      sidebar:
+        nav: "docs" 
+  # lectures
+  - scope:
+      path: ""
+      type: lectures
+    values:
+      category: "lectures"
+      layout: single
+      sidebar:
+        nav: "docs"
+  # worksheets
+  - scope:
+      path: ""
+      type: worksheets
+    values:
+      category: "worksheets"
+      layout: single
+      sidebar:
+        nav: "docs"        
+  # pages
+  - scope:
+      path: "_pages"
+      type: pages
+    values:
+      layout: single
+      sidebar:
+        nav: "docs"        
+
 plugins:
   - jekyll-feed
 
