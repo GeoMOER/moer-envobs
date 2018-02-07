@@ -19,7 +19,7 @@ source "https://rubygems.org"
 # uncomment the line below. To upgrade, run `bundle update github-pages`.
 # moer: Add lines below to use custom theme and enable use on GitHub pages, too.
 gem "github-pages", group: :jekyll_plugins
-# gem "jekyll-remote-theme"
+
 
 # If you have any plugins, put them here!
 # moer: Add more plugins.
