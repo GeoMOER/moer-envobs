@@ -32,7 +32,7 @@
        <ul>
        {% assign items = cat.items | sort: 'order' %}
        {% for item in items %}
-         <li><a href="/msc-phygeo-environmental-observations-moer {{ item.url }}" class>{{ item.title }}</a></li>
+         <li><a href="/msc-phygeo-environmental-observations-moer{{ item.url }}" class>{{ item.title }}</a></li>
        {% endfor %}
        </ul>
 	   </li>

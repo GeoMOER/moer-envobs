@@ -8,7 +8,7 @@ header:
   overlay_image: /assets/images/envobs_title.jpg
   caption: "Photo credit: [**Environmental Informatics Marburg**](https://www.flickr.com/environmentalinformatics-marburg/)"
   cta_label: "Go to course units"
-  cta_url: "#test-link"
+  cta_url: "/examples/testexp10"
 excerpt: "Analyze environmental datasets, uncover relationships, and find answers to contemporary environmental questions."
 
 
