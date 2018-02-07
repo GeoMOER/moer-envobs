@@ -33,7 +33,7 @@ github_username:  jekyll
 # moer: Adjust theme etc.
 markdown: kramdown
 # theme: minima
-remote_theme: "marburg-open-courseware/jekyll-template-moer"
+remote_theme: "mmistakes/minimal-mistakes"
 
 # moer: Add collections and default styles.
 include:
