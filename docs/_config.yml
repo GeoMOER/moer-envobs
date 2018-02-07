@@ -16,7 +16,7 @@
 
 # moer: Adjust title etc. Depending on serving the site on GitHub or OER, different
 # url/baseurl settings have to be used.
-title: Marburg Open Educational Resources | Environmental Informatics
+title: Environmental Informatics
 email: your-email@example.com
 description: >- # this means to ignore newlines until "baseurl:"
   Write an awesome description for your new site here. You can edit this
