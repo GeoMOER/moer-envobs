@@ -18,18 +18,18 @@
 # url/baseurl settings have to be used.
 
 
-title: Environmental Informatics
-name: &name "Chris Reudenbach" # &name is a YAML anchor which can be *referenced later
+title: Environmental Observations | Lab of Environmental Informatics
+name: &name "Thomas Nauss" # &name is a YAML anchor which can be *referenced later
 email: nauss@geo.uni-marburg.de
 description: >- # this means to ignore newlines until "baseurl:"
   Write an awesome description for your new site here. You can edit this
   line in _config.yml. It will appear in your document head meta (for
   Google search results) and in your feed.xml site description.
-# baseurl: "/data/mriliasmooc/lm_data/lm_2291"
 title_separator: "|"
-# url: "https://oer.uni-marburg.de"
-url: https://marburg-open-courseware.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
-baseurl: "/msc-phygeo-environmental-observations-moer" # the subpath of your site, e.g. "/blog"
+url: "https://oer.uni-marburg.de"
+baseurl: "/data/mriliasmooc/lm_data/lm_2422"
+#url: https://marburg-open-courseware.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
+#baseurl: "/msc-phygeo-environmental-observations-moer" # the subpath of your site, e.g. "/blog"
 
 twitter_username: jekyllrb
 github_username:  jekyll
@@ -45,23 +45,23 @@ minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt"
 # Site Author
 author:
   name             : *name # *name is a YAML reference pointing to the &anchor earlier
-  avatar           : "/assets/images/reudenbach.jpg"
-  bio              : "Just another boring Akademische Rat."
+  avatar           : "/assets/images/tnauss.jpg"
+  bio              : "Marburg University"
   location         : "Marburg, DE"
-  email            :
-  uri              : "https://www.uni-marburg.de/fb19/personal/mitarbeiter/reudenbachc/index.html"
-  home             : "https://www.uni-marburg.de/fb19/personal/mitarbeiter/reudenbachc/index.html"
+  email            : "nauss@geo.uni-marburg.de"
+  uri              : "https://www.uni-marburg.de/fb19/fachgebiete/umweltinformatik/"
+  home             : "https://www.uni-marburg.de/fb19/fachgebiete/umweltinformatik/nausst/index.html"
   bitbucket        :
   codepen          :
   dribbble         :
-  flickr           :
-  facebook         : *facebook
+  flickr           : "https://www.flickr.com/environmentalinformatics-marburg/"
+  facebook         : "https://www.facebook.com/GeographieMarburg/"
   foursquare       :
-  github           : "gisma"
+  github           : "github.com/marburg-open-courseware"
   gitlab           :
   google_plus      :
   keybase          :
-  instagram        : "gisma"
+  instagram        : 
   lastfm           :
   linkedin         :
   pinterest        :
@@ -69,11 +69,11 @@ author:
   stackoverflow    : # https://stackoverflow.com/users/123456/username
   steam            :
   tumblr           :
-  twitter          : *twitter
+  twitter          : "https://twitter.com/geographie_umr"
   vine             :
   weibo            :
   xing             :
-  youtube          :
+  youtube          : "https://www.youtube.com/channel/UCGiwSv5KYjsNXl6-nZq0SDA"
 
 
 
@@ -85,22 +85,22 @@ include:
 collections:
   examples:
     output: true
-    permalink: /:collection/:path
+    permalink: /:collection/:title.html
   lectures:
     output: true
-    permalink: /:collection/:path
+    permalink: /:collection/:title.html
   units:
     output: true
-    permalink: /:collection/:path
+    permalink: /:collection/:title.html
   unit01:
     output: true
-    permalink: /:collection/:path
+    permalink: /:collection/:title.html
   unit02:
     output: true
-    permalink: /:collection/:path
+    permalink: /:collection/:title.html
   worksheets:
     output: true
-    permalink: /:collection/:path
+    permalink: /:collection/:title.html
 
 defaults:
   # examples
@@ -172,6 +172,7 @@ defaults:
 
 plugins:
   - jekyll-feed
+  - jekyll-sitemap
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list

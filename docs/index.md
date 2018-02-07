@@ -1,48 +1,47 @@
 ---
-title: "Environmental Observations"
+title: Environmental Observations
 layout: splash
-date: 2018-02-06T12:00:00-00:00
+date: '2018-02-06 13:00:00 +0100'
 header:
   overlay_color: "#000"
-  overlay_filter: "0.6"
-  overlay_image: /assets/images/envobs_title.jpg
-  caption: "Photo credit: [**Environmental Informatics Marburg**](https://www.flickr.com/environmentalinformatics-marburg/)"
-  cta_label: "Go to course units"
-  cta_url: "/examples/testexp10"
-excerpt: "Analyze environmental datasets, uncover relationships, and find answers to contemporary environmental questions."
-
-
-feature_row_intro: 
-  - excerpt: "Master level course in the study program [Physical Geography](https://www.uni-marburg.de/fb19/studium/studiengaenge/msc-phygeo) at Marburg University provided as part of Marburg's Open Educational Resources"
-  
+  overlay_filter: 0.6
+  overlay_image: "/assets/images/envobs_title.jpg"
+  caption: 'Photo credit: [**Environmental Informatics Marburg**](https://www.flickr.com/environmentalinformatics-marburg/)'
+  cta_label: Go to course units
+  cta_url: "/units/index.html"
+excerpt: Analyze environmental datasets, uncover relationships, and find answers to
+  contemporary environmental questions.
+feature_row_intro:
+- excerpt: Master level course in the study program [Physical Geography](https://www.uni-marburg.de/fb19/studium/studiengaenge/msc-phygeo)
+    at Marburg University provided as part of [Marburg's Open Educational Resources](https://oer.uni-marburg.de).
 feature_row_ilos:
-  - image_path: /assets/images/envobs_ilos.jpg
-    alt: "PC monitor laying in the garden of the institute."
-    title: "Intended learning outcomes"
-    excerpt: "
-	* A bulletted list identify some common problems in the structure of data frames
+- image_path: "/assets/images/envobs_ilos.jpg"
+  alt: PC monitor laying in the garden of the institute.
+  title: Intended learning outcomes
+  excerpt: "At the end of this course you should be able
+  
+    * to formulate guiding questions and model a schematic data analysis workflow in order to solve a real-life problem, 
 	
-	* A bulletted list identify some common problems in the structure of data frames
+	* to design and test scalable processing routines which implement your analysis workflow,
 	
-	* A bulletted list identify some common problems in the structure of data frames
+	* to communicate your analysis methods and results,
 	
-	* A bulletted list identify some common problems in the structure of data frames
+	* to critically evaluate your analysis results by comparing them to existing findings or theories,
 	
-	* A bulletted list identify some common problems in the structure of data frames
+	* to reflect your data analysis workflow for potential improvements.
 	"
 ---
 
-
 {% include feature_row id="feature_row_intro" type="center" %}
 
-Data analysis is a key competence of professional geographers but it requires profound knowledge in both (statistical) analysis methods and computer sciences. While the reason for the former is obvious, the latter is a direct result of a growing data deluge, induced by technological progress on both the field of data collection and the one of data distribution.
+Environmental observations are one of the key data resources in Geography. Transforming this data into information is essential for knowledge generation and informed decision making. Data analysis methods are powerful tools but they have to be applied with caution in order to gain robust results. Building on already advanced data handling, GIS and remote sensing skills, this course provides room for an intensive experience in contemporary environmental data analysis.
 
 {% include feature_row id="feature_row_ilos" type="left" %}
 
 
 # Course features
 
-The course is intended as a blended learning module. The provided introductions, explanations and examples might also be useful for self-study.
+The course is intended as a blended learning module in our study program. The provided introductions, explanations and examples might also be useful for self-study.
 
 
 
@@ -50,31 +49,21 @@ The course is intended as a blended learning module. The provided introductions,
 
 | Session | Topic | Content |
 |-------|--------|---------|
-| First things first |||
-| 1 | First things first  | Data and information, R, R Studio, R markdown, GitHub, GitHub classroom |
-| 2 | First things second | Working environment, data sets, data types, data structures, logical operators, control structures |
-| Data exploration |||
-| 3 | Look at your data | Reading and writing (tabulated) data, visual data exploitation, descriptive statistics |
-| 4 | Clean your data | Tailoring data sets, fill values and NA, aggregating, merging or sub-setting data sets |
-| Data modelling |||
-| 5 | Explain your data | Linear regression modelling, confidence intervals, sample tests, variance analysis |
-| 6 | Predict your data  | Cross-validation |
-| 7 | Select your variables | Multiple linear models, feature selection |
-| 8 | Predict your non-linear data | Generalized additive models |
-| 9 | T-4 and holding | Build-in hold to finish up the explanation sessions |
-| 10 | Predict your temporal data | Auto-correlation, AR and ARIMA models |
-| 11 | Explain your temporal data | Decomposing time series |
-| Visualization and wrap up |||
-| 12 | Visualize your data | Publication quality graphics |
-| 13 | Visualize your map data | Publication quality graphics |
-| 14 | Wrap up | Feedback, goodbye |
-
+| 1 | Welcome to the real world | From the diary of a data analyst. |
+| 2 | Questions, hypothesis and datasets | Define a problem, formulate questions and model an analysis workflow. |
+| 3 | Standing on the shoulders of (messy) giants | Screen existing solutions and find your way on building upon them. |
+| 4 | Testing and fixing | Workflow testing and preparation of large scale computations. |
+| 5 | Overviews and in-depth analysis | Separate the important from the unimportant information. |
+| 6 | Discuss the results | Evaluate the results and relate them to existing theories and knowledge. |
+| 7 | Communicate your findings | Document your methods and results |
+| 8 | What have i done? | Reflect your work and discuss potential improvements |
+| 9 | Wrap up | Feedback and goodbye |
 
 
 
 # Deliverables
 
-The course requires to solve problems provided as part of regular assignments.
+The course requires to solve problems provided as part of irregular assignments and the composition of a final essay.
 
 
 
