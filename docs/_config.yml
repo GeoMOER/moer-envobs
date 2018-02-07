@@ -16,6 +16,8 @@
 
 # moer: Adjust title etc. Depending on serving the site on GitHub or OER, different
 # url/baseurl settings have to be used.
+
+
 title: Environmental Informatics
 email: your-email@example.com
 description: >- # this means to ignore newlines until "baseurl:"
@@ -24,8 +26,10 @@ description: >- # this means to ignore newlines until "baseurl:"
   Google search results) and in your feed.xml site description.
 # baseurl: "/data/mriliasmooc/lm_data/lm_2291"
 # url: "https://oer.uni-marburg.de"
-baseurl: "/msc-phygeo-environmental-observations-moer"
-url: "http://marburg-open-courseware.github.io"
+title_separator          : "-"
+url: https://marburg-open-courseware.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
+baseurl: "/msc-phygeo-environmental-observations-moer" # the subpath of your site, e.g. "/blog"
+
 twitter_username: jekyllrb
 github_username:  jekyll
 
@@ -34,6 +38,7 @@ github_username:  jekyll
 markdown: kramdown
 # theme: minima
 remote_theme: "mmistakes/minimal-mistakes"
+minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
 
 # moer: Add collections and default styles.
 include:
