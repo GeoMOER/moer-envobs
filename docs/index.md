@@ -86,24 +86,7 @@ The courses assumes advanced knowledge and skills in data analysis using R, remo
 , and [Geo Information Systems](https://oer.uni-marburg.de/ilias.php?ref_id=327&cmdClass=ilrepositorygui&cmdNode=r5&baseClass=ilrepositorygui){:target="_blank"}
 .
 
-{% assign mydocs = site.lectures | group_by: 'category' %}
-{% for cat in mydocs %}
-<h2>{{ cat.name | capitalize }}</h2>
-    <ul>
-      {% assign items = cat.items | sort: 'order' %}
-      {% for item in items %}
-        <li><a href="{{ item.url }}">{{ item.title }}</a></li>
-      {% endfor %}
-    </ul>
-{% endfor %}
 
-{% assign mydocs = site.examples | group_by: 'category' %}
-{% for cat in mydocs %}
-<h2>{{ cat.name | capitalize }}</h2>
-    <ul>
-      {% assign items = cat.items | sort: 'order' %}
-      {% for item in items %}
-        <li><a href="{{ item.url }}">{{ item.title }}</a></li>
-      {% endfor %}
-    </ul>
-{% endfor %}
+
+# Instructor
+{% include author-profile.html %}

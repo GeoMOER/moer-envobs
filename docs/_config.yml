@@ -89,6 +89,9 @@ collections:
   lectures:
     output: true
     permalink: /:collection/:path
+  units:
+    output: true
+    permalink: /:collection/:path
   worksheets:
     output: true
     permalink: /:collection/:path
@@ -113,6 +116,16 @@ defaults:
       layout: single
       sidebar:
         nav: "docs"
+  # units
+  - scope:
+      path: ""
+      type: units
+    values:
+      category: "units"
+      layout: single
+      author_profile: true
+      sidebar:
+        nav: "docs" 
   # worksheets
   - scope:
       path: ""
