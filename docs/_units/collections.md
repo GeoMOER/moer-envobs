@@ -4,11 +4,16 @@ permalink: /units/index.html
 ---
 
 # Course overview
-{% for item in site.units %}
-  <h3>{{ item.title }}</h3>
+
+{% for item in site.unit01 %}
+  <p>{{ item.title }}</p>
   <p>{{ item.description }}</p>
   <p><a href="{{ item.url | prepend: site.baseurl}}">{{ item.title }}</a></p>
-  {% for item1 in site.lectures %}
-  <p><a href="{{ item1.url | prepend: site.baseurl}}">{{ item1.title }}</a></p>
-  {% endfor %}
 {% endfor %}
+
+
+{% for item1 in site.lectures %}
+<a href="{{ item1.url | prepend: site.baseurl}}">{{ item1.title }}</a>
+{% endfor %}
+
+{{ site.categories }}

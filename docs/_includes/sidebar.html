@@ -20,6 +20,26 @@
       {% include nav_list nav=page.sidebar.nav %}
     {% endif %}
 	
+
+	  <nav class="nav__list">
+	  <input id="ac-toc" name="accordion-toc" type="checkbox">
+	  <label for="ac-toc">Toggle Menu</label>
+	  <ul class="nav__items">
+	  {% assign mydocs = site.units | group_by: 'category' %}
+      {% for cat in mydocs %}
+      <li>
+	  <span class="nav__sub-title">{{ cat.name}}</span>
+       <ul>
+       {% assign items = cat.items | sort: 'order' %}
+       {% for item in items %}
+         <li><a href="{{ item.url | prepend: site.baseurl}}" class>{{ item.title }}</a></li>
+       {% endfor %}
+       </ul>
+	   </li>
+		{% endfor %}
+		</ul>
+	    </nav>
+
 	
 	  <nav class="nav__list">
 	  <input id="ac-toc" name="accordion-toc" type="checkbox">
@@ -37,8 +57,8 @@
        </ul>
 	   </li>
 		{% endfor %}
-			</ul>
-	</nav>
+		</ul>
+	    </nav>
 
 		
 		

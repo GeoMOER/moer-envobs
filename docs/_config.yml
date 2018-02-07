@@ -26,8 +26,8 @@ description: >- # this means to ignore newlines until "baseurl:"
   line in _config.yml. It will appear in your document head meta (for
   Google search results) and in your feed.xml site description.
 # baseurl: "/data/mriliasmooc/lm_data/lm_2291"
+title_separator: "|"
 # url: "https://oer.uni-marburg.de"
-title_separator: "-"
 url: https://marburg-open-courseware.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl: "/msc-phygeo-environmental-observations-moer" # the subpath of your site, e.g. "/blog"
 
@@ -92,6 +92,12 @@ collections:
   units:
     output: true
     permalink: /:collection/:path
+  unit01:
+    output: true
+    permalink: /:collection/:path
+  unit02:
+    output: true
+    permalink: /:collection/:path
   worksheets:
     output: true
     permalink: /:collection/:path
@@ -122,6 +128,26 @@ defaults:
       type: units
     values:
       category: "units"
+      layout: single
+      author_profile: true
+      sidebar:
+        nav: "docs" 
+  # unit01
+  - scope:
+      path: ""
+      type: unit01
+    values:
+      category: "unit01"
+      layout: single
+      author_profile: true
+      sidebar:
+        nav: "docs" 
+  # unit02
+  - scope:
+      path: ""
+      type: unit02
+    values:
+      category: "unit02"
       layout: single
       author_profile: true
       sidebar:
