@@ -19,6 +19,7 @@
 
 
 title: Environmental Informatics
+name: &name "Chris Reudenbach" # &name is a YAML anchor which can be *referenced later
 email: nauss@geo.uni-marburg.de
 description: >- # this means to ignore newlines until "baseurl:"
   Write an awesome description for your new site here. You can edit this
@@ -39,6 +40,43 @@ markdown: kramdown
 # theme: minima
 remote_theme: "marburg-open-courseware/jekyll-template-moer"
 minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
+
+
+# Site Author
+author:
+  name             : *name # *name is a YAML reference pointing to the &anchor earlier
+  avatar           : "/assets/images/reudenbach.jpg"
+  bio              : "Just another boring Akademische Rat."
+  location         : "Marburg, DE"
+  email            :
+  uri              : "https://www.uni-marburg.de/fb19/personal/mitarbeiter/reudenbachc/index.html"
+  home             : "https://www.uni-marburg.de/fb19/personal/mitarbeiter/reudenbachc/index.html"
+  bitbucket        :
+  codepen          :
+  dribbble         :
+  flickr           :
+  facebook         : *facebook
+  foursquare       :
+  github           : "gisma"
+  gitlab           :
+  google_plus      :
+  keybase          :
+  instagram        : "gisma"
+  lastfm           :
+  linkedin         :
+  pinterest        :
+  soundcloud       :
+  stackoverflow    : # https://stackoverflow.com/users/123456/username
+  steam            :
+  tumblr           :
+  twitter          : *twitter
+  vine             :
+  weibo            :
+  xing             :
+  youtube          :
+
+
+
 
 # moer: Add collections and default styles.
 include:
@@ -63,6 +101,7 @@ defaults:
     values:
       category: "examples"
       layout: single
+      author_profile: true
       sidebar:
         nav: "docs" 
   # lectures
