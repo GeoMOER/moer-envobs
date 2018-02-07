@@ -19,9 +19,7 @@ feature_row_ilos:
   - image_path: /assets/images/envobs_ilos.jpg
     alt: "PC monitor laying in the garden of the institute."
     title: "Intended learning outcomes"
-    excerpt: "	
-	* A bulletted list identify some common problems in the structure of data frames
-	
+    excerpt: "
 	* A bulletted list identify some common problems in the structure of data frames
 	
 	* A bulletted list identify some common problems in the structure of data frames
@@ -32,9 +30,6 @@ feature_row_ilos:
 	
 	* A bulletted list identify some common problems in the structure of data frames
 	"
-    url: "#test-link"
-    btn_label: "Read More"
-    btn_class: "btn--primary"
 ---
 
 
@@ -43,9 +38,6 @@ feature_row_ilos:
 Data analysis is a key competence of professional geographers but it requires profound knowledge in both (statistical) analysis methods and computer sciences. While the reason for the former is obvious, the latter is a direct result of a growing data deluge, induced by technological progress on both the field of data collection and the one of data distribution.
 
 {% include feature_row id="feature_row_ilos" type="left" %}
-
-Data analysis is a key competence of professional geographers but it requires profound knowledge in both (statistical) analysis methods and computer sciences. While the reason for the former is obvious, the latter is a direct result of a growing data deluge, induced by technological progress on both the field of data collection and the one of data distribution.
-
 
 
 # Course features
