@@ -30,7 +30,7 @@ title_separator: "|"
 #url: "https://oer.uni-marburg.de"
 #baseurl: "/data/mriliasmooc/lm_data/lm_2422"
 url: https://marburg-open-courseware.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
-baseurl: "/msc-phygeo-environmental-observations-moer" # the subpath of your site, e.g. "/blog"
+baseurl: "/moer-envobs" # the subpath of your site, e.g. "/blog"
 
 twitter_username: jekyllrb
 github_username:  jekyll
@@ -41,7 +41,7 @@ markdown: kramdown
 # theme: minima
 remote_theme: "marburg-open-courseware/jekyll-template-moer"
 minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
-
+auto_ids: true
 
 # Site Author
 author:
