@@ -49,10 +49,10 @@ The course is intended as a blended learning module in our study program. The pr
 
 | Session | Topic | Content |
 |-------|--------|---------|
-| 1 | Welcome to the real world | From the diary of a data analyst. |
-| 2 | Questions, hypothesis and datasets | Define a problem, formulate questions and model an analysis workflow. |
-| 3 | Standing on the shoulders of (messy) giants | Screen existing solutions and find your way on building upon them. |
-| 4 | Testing and fixing | Workflow testing and preparation of large scale computations. |
+| 1 | Questions, hypothesis and workflow | Get a project idea, find guiding questions and model the workflow. |
+| 2 | Standing on the shoulders of (messy) giants | Screen existing solutions and find your way on building upon them. |
+| 3 | Exemplary analysis  | Complement the workflow to match your objectives. |
+| 4 | Testing and fixing | Test your workflow and prepare for large scale computations. |
 | 5 | Overviews and in-depth analysis | Separate the important from the unimportant information. |
 | 6 | Discuss the results | Evaluate the results and relate them to existing theories and knowledge. |
 | 7 | Communicate your findings | Document your methods and results |
@@ -63,7 +63,7 @@ The course is intended as a blended learning module in our study program. The pr
 
 # Deliverables
 
-The course requires to solve problems provided as part of irregular assignments and the composition of a final essay.
+The course requires to solve problems provided as part of irregular assignments and the composition of a final essay. The essay should introduce, discuss and reflect the topics of the syllabus.
 
 
 
