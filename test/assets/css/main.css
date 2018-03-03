@@ -1,9 +1,9 @@
 /* moer: change default CSS settings */
 .media { position: relative; display: block; width: 100%; min-width: 200px; margin: auto; height: auto; }
 
-.media-container { position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden; }
+.media-container { position: relative; padding-bottom: 75%; height: 0; overflow: hidden; }
 
-.media-container iframe, .media-container object, .media-container embed, .media-container video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.media-container iframe, .media-container object, .media-container embed, .media-container video { position: absolute; padding-top: 30px; padding-bottom: 30px; top: 0; left: 0; width: 100%; height: 100%; }
 
 /* ========================================================================== Default skin ========================================================================== */
 /*!
@@ -1185,3 +1185,96 @@ a.reversefootnote:hover { text-decoration: underline; }
   .page__hero-caption a { color: #000 !important; }
   /* Hide the following elements on print ========================================================================== */
   .masthead, .toc, .page__share, .page__related, .pagination, .ads, .page__footer, .page__comments-form, .author__avatar, .author__content, .author__urls-wrapper, .nav__list, .sidebar, .adsbygoogle { display: none !important; height: 1px !important; } }
+/* ========================================================================== NOTICE TEXT BLOCKS ========================================================================== */
+/** Default Kramdown usage (no indents!):
+	 *  <div class="notice" markdown="1">
+	 *  #### Headline for the Notice
+	 *  Text for the notice
+	 *  </div> */
+/* Default notice */
+.notice { margin: 2em 0 !important; /* override*/ padding: 1em; color: #494e52; font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif; font-size: 0.75em !important; text-indent: initial; /* override*/ background-color: #f8f9f9; border-radius: 4px; box-shadow: 0 1px 1px rgba(189, 193, 196, 0.25); }
+.notice h4 { margin-top: 0 !important; /* override*/ margin-bottom: 0.75em; }
+.page__content .notice h4 { /* using at-root to override .page-content h4 font size*/ margin-bottom: 0; font-size: 1em; }
+.notice p:last-child { margin-bottom: 0 !important; /* override*/ }
+.notice h4 + p { /* remove space above paragraphs that appear directly after notice headline*/ margin-top: 0; padding-top: 0; }
+.notice a { color: #bdc1c4; }
+.notice a:hover { color: #717476; }
+.notice code { background-color: #fcfcfc; }
+.notice ul:last-child { margin-bottom: 0; /* override*/ }
+
+/* Primary notice */
+.notice--primary { margin: 2em 0 !important; /* override*/ padding: 1em; color: #494e52; font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif; font-size: 0.75em !important; text-indent: initial; /* override*/ background-color: #f2f3f3; border-radius: 4px; box-shadow: 0 1px 1px rgba(122, 130, 136, 0.25); }
+.notice--primary h4 { margin-top: 0 !important; /* override*/ margin-bottom: 0.75em; }
+.page__content .notice--primary h4 { /* using at-root to override .page-content h4 font size*/ margin-bottom: 0; font-size: 1em; }
+.notice--primary p:last-child { margin-bottom: 0 !important; /* override*/ }
+.notice--primary h4 + p { /* remove space above paragraphs that appear directly after notice headline*/ margin-top: 0; padding-top: 0; }
+.notice--primary a { color: #7a8288; }
+.notice--primary a:hover { color: #494e52; }
+.notice--primary code { background-color: #f8f9f9; }
+.notice--primary ul:last-child { margin-bottom: 0; /* override*/ }
+
+/* Info notice */
+.notice--info { margin: 2em 0 !important; /* override*/ padding: 1em; color: #494e52; font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif; font-size: 0.75em !important; text-indent: initial; /* override*/ background-color: #e6e7f4; border-radius: 4px; box-shadow: 0 1px 1px rgba(0, 14, 140, 0.25); }
+.notice--info h4 { margin-top: 0 !important; /* override*/ margin-bottom: 0.75em; }
+.page__content .notice--info h4 { /* using at-root to override .page-content h4 font size*/ margin-bottom: 0; font-size: 1em; }
+.notice--info p:last-child { margin-bottom: 0 !important; /* override*/ }
+.notice--info h4 + p { /* remove space above paragraphs that appear directly after notice headline*/ margin-top: 0; padding-top: 0; }
+.notice--info a { color: #000e8c; }
+.notice--info a:hover { color: #000854; }
+.notice--info code { background-color: #f2f3f9; }
+.notice--info ul:last-child { margin-bottom: 0; /* override*/ }
+
+/* Warning notice */
+.notice--warning { margin: 2em 0 !important; /* override*/ padding: 1em; color: #494e52; font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif; font-size: 0.75em !important; text-indent: initial; /* override*/ background-color: #fef4e6; border-radius: 4px; box-shadow: 0 1px 1px rgba(248, 148, 6, 0.25); }
+.notice--warning h4 { margin-top: 0 !important; /* override*/ margin-bottom: 0.75em; }
+.page__content .notice--warning h4 { /* using at-root to override .page-content h4 font size*/ margin-bottom: 0; font-size: 1em; }
+.notice--warning p:last-child { margin-bottom: 0 !important; /* override*/ }
+.notice--warning h4 + p { /* remove space above paragraphs that appear directly after notice headline*/ margin-top: 0; padding-top: 0; }
+.notice--warning a { color: #f89406; }
+.notice--warning a:hover { color: #955904; }
+.notice--warning code { background-color: #fffaf3; }
+.notice--warning ul:last-child { margin-bottom: 0; /* override*/ }
+
+/* Success notice */
+.notice--success { margin: 2em 0 !important; /* override*/ padding: 1em; color: #494e52; font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif; font-size: 0.75em !important; text-indent: initial; /* override*/ background-color: #eff9ef; border-radius: 4px; box-shadow: 0 1px 1px rgba(98, 196, 98, 0.25); }
+.notice--success h4 { margin-top: 0 !important; /* override*/ margin-bottom: 0.75em; }
+.page__content .notice--success h4 { /* using at-root to override .page-content h4 font size*/ margin-bottom: 0; font-size: 1em; }
+.notice--success p:last-child { margin-bottom: 0 !important; /* override*/ }
+.notice--success h4 + p { /* remove space above paragraphs that appear directly after notice headline*/ margin-top: 0; padding-top: 0; }
+.notice--success a { color: #62c462; }
+.notice--success a:hover { color: #3b763b; }
+.notice--success code { background-color: #f7fcf7; }
+.notice--success ul:last-child { margin-bottom: 0; /* override*/ }
+
+/* Danger notice */
+.notice--danger { margin: 2em 0 !important; /* override*/ padding: 1em; color: #494e52; font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif; font-size: 0.75em !important; text-indent: initial; /* override*/ background-color: #fdefef; border-radius: 4px; box-shadow: 0 1px 1px rgba(238, 95, 91, 0.25); }
+.notice--danger h4 { margin-top: 0 !important; /* override*/ margin-bottom: 0.75em; }
+.page__content .notice--danger h4 { /* using at-root to override .page-content h4 font size*/ margin-bottom: 0; font-size: 1em; }
+.notice--danger p:last-child { margin-bottom: 0 !important; /* override*/ }
+.notice--danger h4 + p { /* remove space above paragraphs that appear directly after notice headline*/ margin-top: 0; padding-top: 0; }
+.notice--danger a { color: #ee5f5b; }
+.notice--danger a:hover { color: #8f3937; }
+.notice--danger code { background-color: #fef7f7; }
+.notice--danger ul:last-child { margin-bottom: 0; /* override*/ }
+
+/* Task notice */
+.notice--task { margin: 2em 0 !important; /* override*/ padding: 1em; color: #494e52; font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif; font-size: 0.75em !important; text-indent: initial; /* override*/ background-color: #e6e7f4; border-radius: 4px; box-shadow: 0 1px 1px rgba(0, 14, 140, 0.25); }
+.notice--task h4 { margin-top: 0 !important; /* override*/ margin-bottom: 0.75em; }
+.page__content .notice--task h4 { /* using at-root to override .page-content h4 font size*/ margin-bottom: 0; font-size: 1em; }
+.notice--task p:last-child { margin-bottom: 0 !important; /* override*/ }
+.notice--task h4 + p { /* remove space above paragraphs that appear directly after notice headline*/ margin-top: 0; padding-top: 0; }
+.notice--task a { color: #000e8c; }
+.notice--task a:hover { color: #000854; }
+.notice--task code { background-color: #f2f3f9; }
+.notice--task ul:last-child { margin-bottom: 0; /* override*/ }
+
+/* Assessment notice */
+.notice--assessment { margin: 2em 0 !important; /* override*/ padding: 1em; color: #494e52; font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif; font-size: 0.75em !important; text-indent: initial; /* override*/ background-color: #eaf6ee; border-radius: 4px; box-shadow: 0 1px 1px rgba(49, 163, 84, 0.25); }
+.notice--assessment h4 { margin-top: 0 !important; /* override*/ margin-bottom: 0.75em; }
+.page__content .notice--assessment h4 { /* using at-root to override .page-content h4 font size*/ margin-bottom: 0; font-size: 1em; }
+.notice--assessment p:last-child { margin-bottom: 0 !important; /* override*/ }
+.notice--assessment h4 + p { /* remove space above paragraphs that appear directly after notice headline*/ margin-top: 0; padding-top: 0; }
+.notice--assessment a { color: #31a354; }
+.notice--assessment a:hover { color: #1d6232; }
+.notice--assessment code { background-color: #f5faf6; }
+.notice--assessment ul:last-child { margin-bottom: 0; /* override*/ }
