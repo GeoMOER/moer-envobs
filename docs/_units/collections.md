@@ -12,3 +12,8 @@ permalink: /units/index.html
 {% for item in site.unit02 %}
   <p><a href="{{ item.url | prepend: site.baseurl}}">{{ item.title }}</a></p>
 {% endfor %}
+
+## Unit 03
+{% for item in site.unit03 %}
+  <p><a href="{{ item.url | prepend: site.baseurl}}">{{ item.title }}</a></p>
+{% endfor %}

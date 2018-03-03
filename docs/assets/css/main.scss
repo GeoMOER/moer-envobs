@@ -29,8 +29,7 @@ height : auto;
 
 .media-container {
 	position: relative;
-	padding-bottom: 56.25%;
-	padding-top: 30px;
+	padding-bottom: 75%;
 	height: 0;
 	overflow: hidden;
 }
@@ -40,6 +39,8 @@ height : auto;
 .media-container embed,
 .media-container video {
 	position: absolute;
+	padding-top: 30px;
+	padding-bottom: 30px;
 	top: 0;
 	left: 0;
 	width: 100%;

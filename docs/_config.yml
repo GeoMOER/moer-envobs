@@ -99,6 +99,9 @@ collections:
   unit02:
     output: true
     permalink: /:collection/:title.html
+  unit03:
+    output: true
+    permalink: /:collection/:title.html
   worksheets:
     output: true
     permalink: /:collection/:title.html
@@ -146,6 +149,15 @@ defaults:
       type: unit02
     values:
       category: "unit02"
+      layout: single
+      sidebar:
+        nav: "docs" 
+  # unit03
+  - scope:
+      path: ""
+      type: unit03
+    values:
+      category: "unit03"
       layout: single
       sidebar:
         nav: "docs" 
