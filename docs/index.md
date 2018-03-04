@@ -50,14 +50,10 @@ The course is intended as a blended learning module in our study program. The pr
 | Session | Topic | Content |
 |-------|--------|---------|
 | 1 | Questions, hypothesis and workflow | Get a project idea, find guiding questions and model the workflow. |
-| 2 | Standing on the shoulders of (messy) giants | Screen existing solutions and find your way on building upon them. |
-| 3 | Exemplary analysis  | Complement the workflow to match your objectives. |
-| 4 | Testing and fixing | Test your workflow and prepare for large scale computations. |
-| 5 | Overviews and in-depth analysis | Separate the important from the unimportant information. |
-| 6 | Discuss the results | Evaluate the results and relate them to existing theories and knowledge. |
-| 7 | Communicate your findings | Document your methods and results |
-| 8 | What have i done? | Reflect your work and discuss potential improvements |
-| 9 | Wrap up | Feedback and goodbye |
+| 2 | Standing on the shoulders of (messy) giants | Screen existing solutions and find your way on building upon them. Complement and test solutions in order to prepare your analysis workflow for large scale computations. |
+| 3 | Overviews and in-depth analysis | Cross-check your guiding questions, separate the important from the non important and analyze your data. |
+| 4 | Communicate your findings | Document your methods and results and critically evaluate your findings. |
+| 5 | What have i done? | Reflect your work and discuss potential improvements, get some Feedback and say goodbye. |
 
 
 

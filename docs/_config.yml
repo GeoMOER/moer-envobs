@@ -18,7 +18,7 @@
 # url/baseurl settings have to be used.
 
 
-title: Environmental Observations | Lab of Environmental Informatics
+title: Lab of Environmental Informatics
 name: &name "Thomas Nauss" # &name is a YAML anchor which can be *referenced later
 email: nauss@geo.uni-marburg.de
 description: >- # this means to ignore newlines until "baseurl:"
@@ -102,6 +102,12 @@ collections:
   unit03:
     output: true
     permalink: /:collection/:title.html
+  unit04:
+    output: true
+    permalink: /:collection/:title.html
+  unit05:
+    output: true
+    permalink: /:collection/:title.html
   worksheets:
     output: true
     permalink: /:collection/:title.html
@@ -139,7 +145,7 @@ defaults:
       path: ""
       type: unit01
     values:
-      category: "unit01"
+      category: "Unit 01"
       layout: single
       sidebar:
         nav: "docs" 
@@ -148,7 +154,7 @@ defaults:
       path: ""
       type: unit02
     values:
-      category: "unit02"
+      category: "Unit 02"
       layout: single
       sidebar:
         nav: "docs" 
@@ -157,7 +163,25 @@ defaults:
       path: ""
       type: unit03
     values:
-      category: "unit03"
+      category: "Unit 03"
+      layout: single
+      sidebar:
+        nav: "docs" 
+  # unit04
+  - scope:
+      path: ""
+      type: unit04
+    values:
+      category: "Unit 04"
+      layout: single
+      sidebar:
+        nav: "docs" 
+  # unit05
+  - scope:
+      path: ""
+      type: unit05
+    values:
+      category: "Unit 05"
       layout: single
       sidebar:
         nav: "docs" 

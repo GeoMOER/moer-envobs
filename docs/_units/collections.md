@@ -1,5 +1,5 @@
 ---
-title: Units
+title: Environmental Observations
 permalink: /units/index.html 
 ---
 
@@ -15,5 +15,15 @@ permalink: /units/index.html
 
 ## Unit 03
 {% for item in site.unit03 %}
+  <p><a href="{{ item.url | prepend: site.baseurl}}">{{ item.title }}</a></p>
+{% endfor %}
+
+## Unit 04
+{% for item in site.unit04 %}
+  <p><a href="{{ item.url | prepend: site.baseurl}}">{{ item.title }}</a></p>
+{% endfor %}
+
+## Unit 05
+{% for item in site.unit05 %}
   <p><a href="{{ item.url | prepend: site.baseurl}}">{{ item.title }}</a></p>
 {% endfor %}
